@@ -64,7 +64,7 @@ pipeline {
                         sshUserPrivateKey(credentialsId: 'ec2-ssh-key', keyFileVariable: 'SSH_KEY', usernameVariable: 'SSH_USER'),
                         usernamePassword(credentialsId: env.DOCKER_CREDENTIALS_ID, usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')
                     ]) {
-                        def hostIP = "65.0.117.219" // EC2 instance IP
+                        def hostIP = "3.108.195.65" // EC2 instance IP
                         
                         // Disable strict host checking to pass via Jenkins headless node
                         sh """
