@@ -80,7 +80,21 @@ export default function PropertyDetails() {
     </>
   );
 
-  if (!property) return null;
+  if (!property) return (
+    <>
+      <Navbar />
+      <main style={{ minHeight: "calc(100vh - 64px)", padding: "40px 24px" }}>
+        <div className="page-container">
+          <Link href="/user-dashboard" className="btn-secondary" style={{ marginBottom: 28, display: "inline-flex" }}>
+            <ChevronLeft size={16} /> Back to Properties
+          </Link>
+          <div className="glass" style={{ textAlign: "center", padding: 40 }}>
+            <p style={{ color: "var(--text-secondary)" }}>Property details could not be loaded.</p>
+          </div>
+        </div>
+      </main>
+    </>
+  );
 
   return (
     <>

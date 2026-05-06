@@ -37,7 +37,14 @@ export default function HomePage() {
       if (res.data.role === "admin") router.push("/dashboard");
       else router.push("/user-dashboard");
     } catch (err: unknown) {
-      const msg = (err as { response?: { data?: { message?: string } } })?.response?.data?.message ?? "Login failed";
+      const error = err as {
+        message?: string;
+        response?: { status?: number; data?: { message?: string } };
+      };
+      const msg =
+        error.response?.data?.message ??
+        (error.response?.status ? `Login failed (${error.response.status})` : error.message) ??
+        "Login failed";
       toast.error(msg);
     } finally {
       setLoading(false);
@@ -45,19 +52,31 @@ export default function HomePage() {
   };
 
   const handleRegister = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    try {
-      const res = await register(regData);
-      toast.success(res.data.message);
-      setTab("login");
-    } catch (err: unknown) {
-      const msg = (err as { response?: { data?: { message?: string } } })?.response?.data?.message ?? "Registration failed";
-      toast.error(msg);
-    } finally {
-      setLoading(false);
-    }
-  };
+  e.preventDefault();
+
+  if (loading) return; // 🛑 PREVENT MULTIPLE CALLS
+
+  setLoading(true);
+  console.log("REGISTER CALLED"); // debug
+
+  try {
+    const res = await register(regData);
+    toast.success(res.data.message);
+    setLoginData({
+      email: regData.email,
+      password: regData.password,
+      role: regData.role,
+    });
+    setTab("login");
+  } catch (err: unknown) {
+    const msg =
+      (err as { response?: { data?: { message?: string } } })?.response?.data?.message ??
+      "Registration failed";
+    toast.error(msg);
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div
