@@ -2,7 +2,7 @@ import axios from "axios";
 
 // 🔥 FIXED: point directly to Flask backend
 const api = axios.create({
-  baseURL: "http://localhost:5001/api",
+  baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001/api",
   withCredentials: true, // REQUIRED for session cookies
   headers: { "Content-Type": "application/json" },
 });
@@ -31,7 +31,7 @@ export const uploadPropertyImage = async (file: File): Promise<string> => {
   formData.append("image", file);
 
   const res = await axios.post(
-    "http://localhost:5001/api/upload_property_image", // 🔥 FIXED
+    `${process.env.NEXT_PUBLIC_API_URL}/upload_property_image`, // 🔥 FIXED
     formData,
     {
       withCredentials: true,
