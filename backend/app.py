@@ -27,7 +27,7 @@ app.config.update(
 CORS(
     app,
     supports_credentials=True,
-    origins=["http://localhost:3000", "http://127.0.0.1:3000"],
+    origins=["http://localhost:3000", "http://127.0.0.1:3000", "http://3.108.195.65:3000"],
 )
 
 # ==============================
