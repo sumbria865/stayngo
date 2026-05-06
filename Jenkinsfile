@@ -71,8 +71,8 @@ pipeline {
                             ssh -i \$SSH_KEY -o StrictHostKeyChecking=no \$SSH_USER@${hostIP} '
                                 cd ~/stayngo && 
                                 export DOCKER_USERNAME=${env.DOCKER_USER} &&
-                                /usr/local/bin/docker-compose pull && 
-                                /usr/local/bin/docker-compose up -d
+                                /usr/bin/docker-compose pull && 
+                                /usr/bin/docker-compose up -d
                             '
                         """
                     }
