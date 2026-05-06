@@ -59,19 +59,18 @@ pipeline {
         stage('Deploy to EC2 (Docker Compose)') {
             steps {
                 script {
-                    // Extract SSH key and safely execute the compose pull and up commands natively on the host
                     withCredentials([
                         sshUserPrivateKey(credentialsId: 'ec2-ssh-key', keyFileVariable: 'SSH_KEY', usernameVariable: 'SSH_USER'),
                         usernamePassword(credentialsId: env.DOCKER_CREDENTIALS_ID, usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')
                     ]) {
                         def hostIP = "3.108.195.65" // EC2 instance IP
                         
-                        // Disable strict host checking to pass via Jenkins headless node
                         sh """
                             ssh -i \$SSH_KEY -o StrictHostKeyChecking=no \$SSH_USER@${hostIP} '
-                                cd ~/stayngo && 
+                                cd ~/stayngo &&
                                 export DOCKER_USERNAME=${env.DOCKER_USER} &&
-                                /usr/bin/docker-compose -f docker-compose.prod.yml pull && 
+                                /usr/bin/docker-compose -f docker-compose.prod.yml down &&
+                                /usr/bin/docker-compose -f docker-compose.prod.yml pull &&
                                 /usr/bin/docker-compose -f docker-compose.prod.yml up -d
                             '
                         """
@@ -84,7 +83,6 @@ pipeline {
     post {
         always {
             echo 'Pipeline execution finished.'
-            // Clean up credentials and workspace if necessary
         }
         success {
             echo 'Deployment successful! Application successfully rolled out to Kubernetes cluster.'
