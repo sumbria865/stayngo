@@ -4,7 +4,8 @@ pipeline {
     environment {
         // These credentials must be configured in Jenkins dashboard
         DOCKER_CREDENTIALS_ID = 'dockerhub-creds'
-        DOCKER_HUB_REPO = 'yourdockerhubusername/stayngo'
+        DOCKER_HUB_REPO = "prinkadev/stayngo"
+        DOCKER_BUILDKIT = "0"
         KUBECONFIG_CREDNTIALS_ID = 'k8s-config'
     }
 
@@ -44,6 +45,7 @@ pipeline {
                         def frontendImage = "${DOCKER_USER}/stayngo-frontend:latest"
                         
                         echo "Building Images..."
+                        sh "export DOCKER_BUILDKIT=0"
                         sh "docker build -t ${backendImage} ./backend"
                         sh "docker build --no-cache -t ${frontendImage} ./frontend"
                         
